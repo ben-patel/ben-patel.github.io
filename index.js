@@ -7,10 +7,21 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-
 io.on('connection', (socket) => {
-  socket.on('chat message', msg => {
-    io.emit('chat message', msg);
+  socket.on('buy input', msg => {
+    io.emit('buy input', msg);
+  });
+
+  socket.on('stop', msg => {
+    io.emit('stop', msg);
+  });
+
+  socket.on('sell input', msg => {
+    io.emit('sell input', msg);
+  });
+
+  socket.on('username', msg => {
+    io.emit('username', msg);
   });
   
   socket.on("topicEvent", message => {
