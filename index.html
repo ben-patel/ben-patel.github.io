@@ -3,9 +3,10 @@
   <head>
     <title>ben's market</title>
     <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+      body { margin: 0; padding-bottom: 3rem; background-color: rgb(56, 54, 57);}
 
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3.5rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #formsell { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3.5rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #inputBuy { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 0.5rem; margin: 0.25rem; }
       #inputBuy:focus { outline: none; }
       #inputSell { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 0.5rem; margin: 0.25rem; }
@@ -16,132 +17,170 @@
       #askButton {background-color: rgb(235, 97, 97); color:black; font-weight:600; width:70px; cursor:pointer;}
 
       #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(odd) { background: #efefef; }
-
-      #topic { position:relative; top:50px; text-align : center; font-size: 30px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
+      #messages > li { padding: 0.5rem 1rem;}
+      #messages > li:nth-child(odd) { background: #676767; }
+      #messages > li:nth-child(even) { background: #aaa4a4; }
+      
+      #topic { color:#efefef; position:relative; top:50px; text-align : center; font-size: 30px; font-family:Verdana, Geneva, Tahoma, sans-serif;}
       #inputForm { width:100px; }
       #topicButton {position: relative;  left:5px; background-color: white; width:75px; border-radius: 4px; cursor: pointer; }
-
+      #usernameDiv {position:relative; top:50px; text-align : center; font-size: 15px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
+      #usernameButton {position: relative;  left:5px; background-color: white; width:75px; border-radius: 4px; cursor: pointer; }
       #tableWrapper { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%); 
-                      height: 500px; text-align: right;}
-      #orderBook {border:1px solid rgb(255, 255, 255); width:fit-content; height:100%; background-color: rgb(224, 233, 246);}
+                      height: 500px; text-align: right; border: 1px solid rgb(0, 0, 0);}
+      #orderBook {border:1px solid rgb(20, 19, 19); width:fit-content; height:100%; background-color: rgb(35, 35, 35);}
       
-      .tableTitle { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(161, 193, 235); }
-      .tableBid {width: 70px; padding-left: 10px; padding-right:30px; text-align: left;}
+      .tableTitle { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black;}
+      .tableBid {width: 70px; padding-left: 10px; padding-right:30px; height:23.5px; text-align: left;}
       .tablePrice { width: 70px; padding-left:20px; padding-right:20px; text-align: center;}
       .tableAsk {width:70px; padding-right: 10px; padding-left:30px; }
       table, th, td {
-        border: 1px solid rgb(255, 255, 255);
+        border: 1px solid rgb(103, 103, 103);
         border-spacing: 0px;
+        color:hsl(239, 47%, 66%);
       }
+
+      #scores {position:absolute; left:5%; width:200px; border: 2px solid rgb(0, 0, 0);}
+      #stopGame { position: relative; text-align: center; top:75vh;}
+      #stopButton {cursor:pointer; background-color: white; border-radius: 4px; border: 2px solid #c63030;}
+
+      #stonks {background-color: #343232; height:30px; font-size: 15px;}
+      #ticker {display: inline; padding-left:15px; color:green; position: relative; bottom: 10px;}
+      #ticker1 {display:inline; padding-left: 15px; color:#c63030; position: relative; bottom: 10px;}
+
+      #scoreboard {position: absolute; opacity: 0; background-color: #818080; z-index: 10; width:80%; height:50%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                      -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
+                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);text-align: center; border-radius: 5px; border:4px solid rgb(228, 215, 64);}
+      #player {font-size: 25px; list-style-type: none; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
 
+    <marquee id="stonks" behavior="scroll" direction="left"><ul id="stocnks"></ul></marquee>
+    
+    <div id="scoreboard" >
+      <h1 style="font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size:50px;"> Final Scores: </h1>
+      <ul id="scored">
+        <li id="player"></li>
+      </ul>
+    </div>
     <div id="topic" >
       <form id="formInput" action="">
-        <input id="topicInput" autocomplete="off" placeholder="enter topic here"><button id="topicButton">Enter</button> 
+        <input id="topicInput" autocomplete="off" placeholder="enter topic"><button id="topicButton">Enter</button> 
+      </form>
+    </div><br>
+    <div id ="usernameDiv">
+      <form id="usernameInput" action="">
+        <input id="username" autocomplete="off" placeholder="enter username"><button id="usernameButton">Enter</button> 
       </form>
     </div>
 
     <form id="form" action="">
-      <input id="inputBuy" autocomplete="off" /><button id="bidButton">Bid</button>
-      <button id="askButton">Ask</button><input id="inputSell" autocomplete="off" />
+      <input id="inputBuy" autocomplete="off" /><button id="bidButton">BID</button>
+      <button id="askButton">ASK</button><input id="inputSell" autocomplete="off" />
     </form>
 
     <div id="tableWrapper">
       <table id="orderBook">
         <tr>
-          <th class="tableTitle">Bid</th>
-          <th class="tableTitle">Price</th>
-          <th class="tableTitle">Ask</th>
+          <th class="tableTitle">BID</th>
+          <th class="tableTitle">QUOTE</th>
+          <th class="tableTitle">ASK</th>
+        </tr>
+        <tr>
+          <td class="tableBid" id="b0"></td>
+          <td class="tablePrice" id="p0"></td>
+          <td class="tableAsk" id="s0"></td>
         </tr>
         <tr>          
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
+          <td class="tableBid" id="b1"></td>
+          <td class="tablePrice" id="p1"></td>
+          <td class="tableAsk" id="s1"></td>
         </tr>
         <tr>          
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
+          <td class="tableBid" id="b2"></td>
+          <td class="tablePrice" id="p2"></td>
+          <td class="tableAsk" id="s2"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
+          <td class="tableBid" id="b3"></td>
+          <td class="tablePrice" id="p3"></td>
+          <td class="tableAsk" id="s3"></td>
         </tr>
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
-        </tr>
-        <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
+          <td class="tableBid" id="b4"></td>
+          <td class="tablePrice" id="p4"></td>
+          <td class="tableAsk" id="s4"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
-        </tr>
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
+          <td class="tableBid" id="b5"></td>
+          <td class="tablePrice" id="p5"></td>
+          <td class="tableAsk" id="s5"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
+          <td class="tableBid" id="b6"></td>
+          <td class="tablePrice" id="p6"></td>
+          <td class="tableAsk" id="s6"></td>
+        </tr>
+          <td class="tableBid" id="b7"></td>
+          <td class="tablePrice" id="p7"></td>
+          <td class="tableAsk" id="s7"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
-        </tr>
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
+          <td class="tableBid" id="b8"></td>
+          <td class="tablePrice" id="p8"></td>
+          <td class="tableAsk" id="s8"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
+          <td class="tableBid" id="b9"></td>
+          <td class="tablePrice" id="p9"></td>
+          <td class="tableAsk" id="s9"></td>
+        </tr>
+          <td class="tableBid" id="b10"></td>
+          <td class="tablePrice" id="p10"></td>
+          <td class="tableAsk" id="s10"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
-        </tr>
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
+          <td class="tableBid" id="b11"></td>
+          <td class="tablePrice" id="p11"></td>
+          <td class="tableAsk" id="s11"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
+          <td class="tableBid" id="b12"></td>
+          <td class="tablePrice" id="p12"></td>
+          <td class="tableAsk" id="s12"></td>
+        </tr>
+          <td class="tableBid" id="b13"></td>
+          <td class="tablePrice" id="p13"></td>
+          <td class="tableAsk" id="s13"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
-        </tr>
-          <td class="tableBid" id="b1">20</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">10</td>
+          <td class="tableBid" id="b14"></td>
+          <td class="tablePrice" id="p14"></td>
+          <td class="tableAsk" id="s14"></td>
         </tr>
         <tr>
-          <td class="tableBid" id="b1">10</td>
-          <td class="tablePrice" id="p1">4.000</td>
-          <td class="tableAsk" id="s1">50</td>
+          <td class="tableBid" id="b15"></td>
+          <td class="tablePrice" id="p15"></td>
+          <td class="tableAsk" id="s15"></td>
+        </tr>
+          <td class="tableBid" id="b16"></td>
+          <td class="tablePrice" id="p16"></td>
+          <td class="tableAsk" id="s16"></td>
         </tr>
         
       </table>
+    </div>
+
+    <div id="scores">
+      <ul id="messages">
+        <li style="background-color:rgb(78, 77, 77); color:white; font-weight: 500; border-bottom: 2px rgb(0, 0, 0) solid; text-align: center;">Players:</li>
+      </ul>
+    </div>
+
+    <div id="stopGame">
+      <button id="stopButton">stop game</button>
     </div>
 <!---------------------------------------------------------------------------------------------------------------------------------->
     <script src="/socket.io/socket.io.js"></script>
@@ -149,19 +188,54 @@
     <script>
       var socket = io();
 
-      var messages = document.getElementById('messages');
       var formBuy = document.getElementById('form');
-      var input = document.getElementById('inputBuy');
+      var buyInput = document.getElementById('inputBuy');
+      var sellInput = document.getElementById('inputSell');
+
+      var usernameForm = document.getElementById('usernameInput');
+      var usernameInput = document.getElementById('username');
+      var usernameDiv = document.getElementById('usernameDiv');
+
       var topicInput = document.getElementById('topicInput');
       var topicForm = document.getElementById('formInput');
-      
+      var user = "null";
+
+      var stopForm = document.getElementById("stopButton");
+
+      var prices = new Map();
+      var names = [];
+      var profit = 0;
+
+      stopForm.addEventListener('click', function(e) {
+        e.preventDefault();
+        socket.emit('stop', profit);
+      });
+
       formBuy.addEventListener('submit', function(e) {
         e.preventDefault();
-        if (input.value) {
-          socket.emit('chat message', input.value);
-          input.value = '';
+        if (buyInput.value) {
+          socket.emit('buy input', buyInput.value);
+          buyInput.value = '';
         }
       });
+
+      formBuy.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (sellInput.value) {
+          socket.emit('sell input', sellInput.value);
+          sellInput.value = '';
+        }
+      });
+
+      usernameForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (username.value) {
+          user = username.value;
+          socket.emit("username", username.value);
+          username.value = '';
+          usernameDiv.innerHTML = "";
+        }
+      })
 
       formInput.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -171,20 +245,178 @@
         }
       })
 
-      socket.on('chat message', function(msg) {
-        var item = document.createElement('li');
-        item.textContent = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
+      socket.on('username', function(msg){
+        var ul = document.getElementById("messages");
+        var li = document.createElement("li");
+
+        li.appendChild(document.createTextNode(msg));
+        ul.appendChild(li); 
+      })
+
+      socket.on('stop', function(msg){
+        var leaderboard = document.getElementById('scoreboard');
+        leaderboard.style.opacity = 1;
+        var scores = document.getElementById("scored");
+        var llist = document.createElement("li");
+        llist.setAttribute("id", "player");
+        llist.appendChild(document.createTextNode(user + "'s profit: " + msg));
+        scores.appendChild(llist); 
+      })
+
+      var last_meet = -1;
+      var last_buy = -2;
+      var last_sell = -3;
+
+      socket.on('buy input', function(msg) {  
+          let num = parseFloat(msg);
+
+          var ul = document.getElementById("stocnks");
+          var list = document.createElement("li");
+          list.setAttribute("id", "ticker");
+          list.appendChild(document.createTextNode(num));
+          ul.appendChild(list);
+
+
+          if(prices.get(num) == undefined) {
+            prices.set(num,Number(0));
+          }else if(prices.get(num) < 0) {
+            last_meet = num;
+          }
+
+          last_buy = num;
+          prices.set(num, prices.get(num) + 10);
+          
+          if (num < last_meet && prices.get(num) < 0 && last_meet != -1) {
+            profit += 10*(Math.abs(num - last_meet));
+          }
+          prices = new Map([...prices.entries()].sort((a, b) => b[0] - a[0]));
+          
+          for(let j = 0; j < 17; j++) {
+            let stringID = "p" + j.toString();
+            let buyVol = "b" + j.toString();
+            let sellVol = "s" + j.toString(); 
+            
+            document.getElementById(stringID).innerHTML = ''; 
+            document.getElementById(buyVol).innerHTML = ''; 
+            document.getElementById(sellVol).innerHTML = ''; 
+          }
+
+          let i = 0;
+          for (let [key, value] of prices) {
+            let stringID = "p" + i.toString();
+            let buyVol = "b" + i.toString();
+            let sellVol = "s" + i.toString();
+
+            document.getElementById(stringID).innerHTML = key;
+            if (value == 0) {
+              document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
+              setTimeout(() => {  document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; ; }, 50);
+              document.getElementById(stringID).innerHTML = '';
+              document.getElementById(sellVol).innerHTML = ''; 
+              document.getElementById(buyVol).innerHTML = '';
+              prices.delete(key);
+              i--;
+
+            }else if (value < 0) {
+              document.getElementById(sellVol).style.color = "red";
+              document.getElementById(sellVol).innerHTML = Math.abs(value);
+            }else {
+              document.getElementById(buyVol).style.color = "green";
+              document.getElementById(buyVol).innerHTML = value; 
+            }
+            i++;
+
+            if (i >= 17) {
+              i = 0;
+            }
+            if (key == last_meet) {
+              document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
+            }else {
+              document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
+            }
+          }
+          console.log(profit);
+      });
+
+      socket.on('sell input', function(msg) {  
+          let num = parseFloat(msg);
+
+          var ul = document.getElementById("stocnks");
+          var list = document.createElement("li");
+          list.setAttribute("id", "ticker1");
+          list.appendChild(document.createTextNode(num));
+          ul.appendChild(list);
+
+          if(prices.get(num) == undefined) {
+            prices.set(num,Number(0));
+          }else if(prices.get(num) > 0) {
+            last_meet = num;
+          }
+
+          last_sell = num;
+          if (num == last_buy) {
+            last_meet = num;
+          }
+          prices.set(num, prices.get(num) - 10);
+          
+          if (num > last_meet && prices.get(num) > 0 && last_meet != -1) {
+            profit += 10*(Math.abs(num - last_meet));
+          }
+          prices = new Map([...prices.entries()].sort((a, b) => b[0] - a[0]));
+     
+          for(let j = 0; j < 17; j++) {
+            let stringID = "p" + j.toString();
+            let buyVol = "b" + j.toString();
+            let sellVol = "s" + j.toString(); 
+            
+            document.getElementById(stringID).innerHTML = ''; 
+            document.getElementById(buyVol).innerHTML = ''; 
+            document.getElementById(sellVol).innerHTML = ''; 
+          }
+
+          let i = 0;
+          for (let [key, value] of prices) {
+            let stringID = "p" + i.toString();
+            let buyVol = "b" + i.toString();
+            let sellVol = "s" + i.toString();
+
+            document.getElementById(stringID).innerHTML = key;
+            
+            if (value == 0) {
+              document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
+              setTimeout(() => {  document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; }, 50);
+              document.getElementById(stringID).innerHTML = '';
+              document.getElementById(sellVol).innerHTML = ''; 
+              document.getElementById(buyVol).innerHTML = '';
+              prices.delete(key);
+              i--;
+            
+            }else if (value < 0) {
+              document.getElementById(sellVol).style.color = "red";
+              document.getElementById(sellVol).innerHTML = Math.abs(value);
+            }else {
+              document.getElementById(buyVol).style.color = "green";
+              document.getElementById(buyVol).innerHTML = value; 
+            }
+            i++;
+            
+            if (key == last_meet) {
+              document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
+            }else {
+              document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
+            }
+          }
+          
+
+          console.log(profit);
       });
 
       socket.on("topicEvent", function(msg) {
-        console.log('hiifds');
         var item = document.getElementById('topic');
-        item.innerHTML = msg; 
+        item.innerHTML = "topic: " + msg; 
       })
+      /*------------------------------------------*/
 
-      socket.on('')
     </script>
   </body>
 </html>
