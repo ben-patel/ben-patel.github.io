@@ -21,30 +21,34 @@
       #messages > li:nth-child(odd) { background: #676767; }
       #messages > li:nth-child(even) { background: #aaa4a4; }
       
-      #topic { color:#efefef; position:relative; top:20px; text-align : center; font-size: 30px; font-family:Verdana, Geneva, Tahoma, sans-serif;}
-      #inputForm { width:100px; }
-      #topicButton {position: relative;  left:5px; background-color: white; width:75px; border-radius: 4px; cursor: pointer; }
-      #usernameDiv {position:relative; top:20px; text-align : center; font-size: 15px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
-      #usernameButton {position: relative;  left:5px; background-color: white; width:75px; border-radius: 4px; cursor: pointer; }
-      #tableWrapper { position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%);
+      #forms {position: fixed; height: 60%;  width:20%; left:20%; top:45%; text-align: center; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
-                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%); 
-                      height: 300px; text-align: right; border: 1px solid rgb(0, 0, 0);}
-      #orderBook {border:1px solid rgb(20, 19, 19); width:fit-content; height:100%; background-color: rgb(35, 35, 35);}
+                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
+      #topic { color:#efefef; position:relative; font-size: 30px; font-family:Verdana, Geneva, Tahoma, sans-serif;}
+      #inputForm { width:100px; background-color: gray;}
+      #topicButton {position: relative;  left:5px; background-color: gray; width:75px; border-radius: 4px; cursor: pointer; }
+      #usernameDiv {position:relative; font-size: 15px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
+      #usernameButton {position: relative;  left:5px; background-color: gray; width:75px; border-radius: 4px; cursor: pointer; }
+
+      #tableWrapper { position: fixed; left:50%; top:45%; text-align: right; transform: translate(-50%, -50%);
+                      -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
+                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
+      #orderBook {border:1px solid rgb(20, 19, 19);  background-color: rgb(35, 35, 35);}
       
       .tableTitle { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black;}
-      .tableBid {width: 70px; padding-left: 10px; padding-right:30px; height:23.5px; text-align: left;}
+      .tableBid {width: 70px; padding-left: 10px; padding-right:30px; height:2.75vh; text-align: left;}
       .tablePrice { width: 70px; padding-left:20px; padding-right:20px; text-align: center;}
       .tableAsk {width:70px; padding-right: 10px; padding-left:30px; }
       table, th, td {
         border: 1px solid rgb(103, 103, 103);
         border-spacing: 0px;
         color:hsl(239, 47%, 66%);
+        font-size: 1.8vh;
       }
 
-      #scores {position:absolute; left:5%; width:200px; border: 2px solid rgb(0, 0, 0);}
-      #stopGame { position: relative; text-align: center; top:75vh;}
-      #stopButton {cursor:pointer; background-color: white; border-radius: 4px; border: 2px solid #c63030;}
+      #scores {position: relative; top:50px; border: 2px solid rgb(0, 0, 0); }
+      #stopGame { position: relative; top:25px;}
+      #stopButton {cursor:pointer; background-color: gray; border-radius: 4px; border: 2px solid #c63030;}
 
       #stonks {background-color: #343232; height:30px; font-size: 15px;}
       #ticker {display: inline; padding-left:15px; color:green; position: relative; bottom: 10px;}
@@ -54,33 +58,27 @@
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);text-align: center; border-radius: 5px; border:4px solid rgb(228, 215, 64);}
       #player {font-size: 25px; list-style-type: none; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+
+      #pastOrders { position: fixed; width:20%; left:80%; top:45.1%; text-align: right; transform: translate(-50%, -50%);
+                      -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
+                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
+      #orderTable {color:hsl(239, 47%, 66%); width:100%; border:1px solid black;}
+      .tableBuy {text-align: center; width:50%; color:#c63030; height:2.75vh; background-color: rgb(35, 35, 35);}
+      .tableSell {text-align: center; width:50%; height:2.75vh; color:green; background-color: rgb(35, 35, 35);}
+      .tableBuyHead { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black; font-weight: 600;}
+      .tableSellHead { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black; font-weight: 600;}
     </style>
   </head>
   <body>
 
     <marquee id="stonks" behavior="scroll" direction="left"><ul id="stocnks"></ul></marquee>
     
-    <div id="scoreboard" >
+    <!--div id="scoreboard" >
       <h1 style="font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size:50px;"> Final Scores: </h1>
       <ul id="scored">
         <li id="player"></li>
       </ul>
-    </div>
-    <div id="topic" >
-      <form id="formInput" action="">
-        <input id="topicInput" autocomplete="off" placeholder="enter topic"><button id="topicButton">Enter</button> 
-      </form>
-    </div><br>
-    <div id ="usernameDiv">
-      <form id="usernameInput" action="">
-        <input id="username" autocomplete="off" placeholder="enter username"><button id="usernameButton">Enter</button> 
-      </form>
-    </div>
-
-    <form id="form" action="">
-      <input id="inputBuy" autocomplete="off" /><button id="bidButton">BID</button>
-      <button id="askButton">ASK</button><input id="inputSell" autocomplete="off" />
-    </form>
+    </div-->
 
     <div id="tableWrapper">
       <table id="orderBook">
@@ -173,15 +171,118 @@
       </table>
     </div>
 
-    <div id="scores">
-      <ul id="messages">
-        <li style="background-color:rgb(78, 77, 77); color:white; font-weight: 500; border-bottom: 2px rgb(0, 0, 0) solid; text-align: center;">Players:</li>
-      </ul>
+    <div id="pastOrders">
+      <table id="orderTable">
+        <tr>
+          <td class="tableSellHead">
+            PAST BIDS
+          </td>
+          <td class="tableBuyHead">
+            PAST ASKS
+          </td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob0"></td>
+          <td class="tableBuy" id="os0"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob1"></td>
+          <td class="tableBuy" id="os1"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob2"></td>
+          <td class="tableBuy" id="os2"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob3"></td>
+          <td class="tableBuy" id="os3"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob4"></td>
+          <td class="tableBuy" id="os4"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob5"></td>
+          <td class="tableBuy" id="os5"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob6"></td>
+          <td class="tableBuy" id="os6"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob7"></td>
+          <td class="tableBuy" id="os7"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob8"></td>
+          <td class="tableBuy" id="os8"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob9"></td>
+          <td class="tableBuy" id="os9"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob10"></td>
+          <td class="tableBuy" id="os10"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob11"></td>
+          <td class="tableBuy" id="os11"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob12"></td>
+          <td class="tableBuy" id="os12"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob13"></td>
+          <td class="tableBuy" id="os13"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob14"></td>
+          <td class="tableBuy" id="os14"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob15"></td>
+          <td class="tableBuy" id="os15"></td>
+        </tr>
+        <tr>
+          <td class="tableSell" id="ob16"></td>
+          <td class="tableBuy" id="os16"></td>
+        </tr>
+      </table>
     </div>
 
-    <div id="stopGame">
-      <button id="stopButton">stop game</button>
+    <div id="forms">
+      <div id="topic">
+        <form id="formInput" action="">
+          <input id="topicInput" autocomplete="off" placeholder="enter topic" style="background-color:#aaa4a4; border-radius:4px;"><button id="topicButton">Enter</button> 
+        </form>
+      </div><br>
+      <div id ="usernameDiv">
+        <form id="usernameInput" action="">
+          <input id="username" autocomplete="off" placeholder="enter username" style="background-color:#aaa4a4; border-radius:4px;"><button id="usernameButton">Enter</button> 
+        </form>
+      </div>
+
+      <div id="stopGame">
+        <button id="stopButton">stop game</button>
+      </div>
+
+      <div id="scores">
+        <ul id="messages">
+          <li style="background-color:rgb(78, 77, 77); color:white; font-weight: 500; border-bottom: 2px rgb(0, 0, 0) solid; text-align: center;">Players:</li>
+        </ul>
+      </div>
+      
     </div>
+
+    <form id="form" action="">
+      <input id="inputBuy" autocomplete="off" /><button id="bidButton">BID</button>
+      <button id="askButton">ASK</button><input id="inputSell" autocomplete="off" />
+    </form>
+
+
+
 <!---------------------------------------------------------------------------------------------------------------------------------->
     <script src="/socket.io/socket.io.js"></script>
 
@@ -206,6 +307,9 @@
       var names = [];
       var profit = 0;
 
+      var recentSells = [];
+      var recentBuys = [];
+
       stopForm.addEventListener('click', function(e) {
         e.preventDefault();
         socket.emit('stop', profit);
@@ -214,6 +318,13 @@
       formBuy.addEventListener('submit', function(e) {
         e.preventDefault();
         if (buyInput.value) {
+          recentBuys.unshift(buyInput.value);
+
+          for(let i = 0; i < Math.min(17, recentBuys.length); i++) {
+            let stringBD = "ob" + i.toString();
+            document.getElementById(stringBD).innerHTML = recentBuys[i];
+          }
+
           socket.emit('buy input', buyInput.value);
           buyInput.value = '';
         }
@@ -222,6 +333,13 @@
       formBuy.addEventListener('submit', function(e) {
         e.preventDefault();
         if (sellInput.value) {
+          recentSells.unshift(sellInput.value);
+
+          for(let i = 0; i < Math.min(17, recentSells.length); i++) {
+            let stringSD = "os" + i.toString();
+            document.getElementById(stringSD).innerHTML = recentSells[i];
+          }
+          
           socket.emit('sell input', sellInput.value);
           sellInput.value = '';
         }
@@ -335,7 +453,6 @@
               document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
             }
           }
-          console.log(profit);
       });
 
       socket.on('sell input', function(msg) {  
@@ -406,9 +523,7 @@
               document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
             }
           }
-          
-
-          console.log(profit);
+        
       });
 
       socket.on("topicEvent", function(msg) {
@@ -420,5 +535,3 @@
     </script>
   </body>
 </html>
-
-
