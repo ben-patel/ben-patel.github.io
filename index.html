@@ -2,8 +2,7 @@
 <html>
   <head>
     <title>ben's market</title>
-    <base href="/">
-    <link rel="icon" type="image/x-icon" href="stonks.ico">
+    <link rel="icon" href="/public/stonks.ico">
     <style>
       body { margin: 0; padding-bottom: 3rem; background-color: rgb(56, 54, 57);}
 
@@ -54,14 +53,14 @@
 
       #scores {position: relative; top:50px; border: 2px solid rgb(0, 0, 0); }
 
-      #scoreboard { opacity: 0; position:fixed; border-radius: 5px; border:5px solid rgb(82, 98, 110); background-color: #424f56; width:60%; height:70%; z-index:10; top:45%; left: 64%; transform: translate(-50%, -50%);
+      #scoreboard { opacity: 0; border:#1c2225 5px solid;  position:fixed; border-radius: 5px; background-color: #424f56; width:60%; height:70%; z-index:10; top:45%; left: 64%; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%); text-align: center;}
-      #scoreboardTable {border:2px solid rgb(33, 62, 97); border-radius:2px; width:200px; text-align: center; position: fixed; left:50%; top:30%; transform: translate(-50%, -50%);
+      #scoreboardTable {border:none; border-radius:2px; width:200px; text-align: center; position: fixed; left:50%; top:40%; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
-      .score {width:70%; height:10%; color:black; background-color: rgb(96, 96, 96); border-color: #343232;}
-      .profit {width:30%; height:10%; background-color: #6f6f6f; border-color: #343232;}
+      .score {width:70%; height:10%; border:none; color:black; background-color: #424f56; font-size: 25px;}
+      .profit {width:30%; height:10%; border:none; background-color:  #424f56; font-size: 25px;}
       #winner {text-align: center; position: relative; top:2.5%; font-size: 35px;}
       #stopGame { position: relative; top:25px;}
       #stopButton {cursor:pointer; background-color: gray; border-radius: 4px; border: 2px solid #c63030;}
@@ -87,25 +86,15 @@
     <marquee id="stonks" behavior="scroll" direction="left"><ul id="stocnks"></ul></marquee>
     
     <div id="scoreboard">
-      <h1 id="winner">The winner is test!</h1>
+      <h1 id="winner" style="color:gold"></h1>
+      <span>
+      <img src="/public/amongGA.gif" style="width:20%; position: relative; left:40%; top:10%;">
+      <img src="/public/amongGA.gif" style="width:20%; position: relative; right:40%; top:10%;">
       <table id="scoreboardTable">
         <tr>
-          <td class="score">
-            ben
-          </td>
-          <td class="profit">
-            4389
-          </td>
-        </tr>
-        <tr>
-          <td class="score">
-            ben
-          </td>
-          <td class="profit">
-            4389
-          </td>
         </tr>
       </table>
+      </span>
     </div>
     <div id="tableWrapper">
       <table id="orderBook">
@@ -394,19 +383,75 @@
       var recentBuys = [];
       var buys = [];
       var sells = [];
-      var gdSell = -1;
-      var gdBuy = -1;
+      var gdSell = [];
+      var gdBuy = [];
+      var bought = [];
 
       stopButton.addEventListener('click', function(e) {
         e.preventDefault();
-        //scoreboard.style.opacity = 1;
-        // change profits
-        //sort map then display 
-        //find max, display max
-        //empty map, and other neccesary variables
+        socket.emit('adjust', "adj");
 
-        //maybe tweak profit with an array, so it updates more consistent
-      })
+        setTimeout(function() {
+          socket.emit('table', 'fd'); 
+        },1000);
+      });
+
+      socket.on('adjust', function(msg) {
+        for(let i = 0; i < sells.length; i++) {
+          if (sells[i] > 0) {
+            profit += Math.min(0.6*Number(realValue),(Number(sells[i]) - Number(realValue)));
+          }
+        }
+
+        for(let j = 0; j < buys.length; j++) {
+          if (buys[j] > 0) {
+            profit += Math.min(0.6*Number(realValue),(Number(realValue) - Number(buys[j]))); 
+          }
+        }
+
+        socket.emit('profitUpdate', profit.toFixed(0), user);
+      });
+      
+      socket.on('table', function(msg) {
+        scoreboard.style.opacity = 1;
+        let playerIndex = 0;
+        var max = -1;
+        var winner = "error -> winner not found";
+        var table = document.getElementById("scoreboardTable");
+
+      
+        for(const [key,value] of Object.entries(players)) {
+          
+          if (value > max || playerIndex == 0) {
+            max = value;
+            winner = key;
+          }
+
+          let currID = "ss" + playerIndex.toString(); 
+          var row = table.insertRow();
+          var cell1 = row.insertCell(0);
+          var cell2 = row.insertCell(1);
+
+          cell1.innerHTML = key;
+          cell2.innerHTML = value;
+          cell2.setAttribute('id', currID);
+
+          playerIndex++;
+          cell1.setAttribute('class',"score");
+          cell2.setAttribute('class', "profit"); 
+
+          if (value == 0) {
+            document.getElementById(currID).style.color = "hsl(239, 47%, 66%)";
+          }else if (value < 0) {
+            document.getElementById(currID).style.color = "red";
+          }else {
+            document.getElementById(currID).style.color = "green";
+          }
+        }
+
+        document.getElementById('winner').innerHTML = "The winner is " + winner + "!";
+        socket.emit('end', "end");
+      });
 
       realValueForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -436,18 +481,19 @@
              }else{
                 document.getElementById(stringFBD).innerHTML = "&#10003";
                 document.getElementById(stringFBD).style.color = "green";
-                gdBuy = Number(buyInput.value);
-
-              if (gdSell > 0) {
-                profit += (Math.abs(Number(gdSell)) - Math.abs(Number(gdBuy)));
-                gdSell = -1;
-                gdBuy = -1;
+                gdBuy.unshift(Number(buyInput.value));
+             }
+             document.getElementById(stringBD).innerHTML = Math.abs(Number(recentBuys[i]));
+            }
+              if (gdBuy.length > 0 && gdSell.length > 0) {
+                profit += (Math.abs(gdSell[0]) - Math.abs(gdBuy[0]));
+                console.log(Math.abs(gdSell[0]));
+                console.log(gdBuy[0]);
+                gdSell.shift();
+                gdBuy.shift();
 
                 socket.emit('profitUpdate', profit, user);
               }
-            }
-            document.getElementById(stringBD).innerHTML = Math.abs(Number(recentBuys[i]));
-          }
 
           for(let k = Math.min(recentSells.length - 1,16); k >= 0; k-- ) {
               if (recentSells[k].toString() == buyInput.value.toString() && recentSells[k] > 0) {
@@ -491,18 +537,19 @@
             }else {
               document.getElementById(stringFSD).innerHTML = "&#10003";
               document.getElementById(stringFSD).style.color = "green";
-              gdSell = Number(sellInput.value);
-
-              if (gdBuy > 0) {
-                profit += (Math.abs(Number(gdSell)) - Math.abs(Number(gdBuy)));
-                gdSell = -1;
-                gdBuy = -1;
+              gdSell.unshift(Number(sellInput.value));
+            }
+              document.getElementById(stringSD).innerHTML = Math.abs(Number(recentSells[i]));
+          }
+              if (gdSell.length > 0 && gdBuy.length > 0) {
+                profit += (Math.abs(Number(gdSell[0])) - Math.abs(Number(gdBuy[0])));
+                console.log(gdBuy[0]);
+                gdSell.shift();
+                gdBuy.shift();
 
                 socket.emit('profitUpdate', profit, user);
               }
-            }
-            document.getElementById(stringSD).innerHTML = Math.abs(Number(recentSells[i]));
-          }
+
           for(let k = Math.min(16,recentBuys.length - 1); k >= 0; k-- ) {
               if (recentBuys[k].toString() == sellInput.value.toString() && Number(recentBuys[k]) > 0) {
                 document.getElementById("fb" + k.toString()).innerHTML = "&#10003";
@@ -738,3 +785,4 @@
   </body>
 </html>
 
+   
