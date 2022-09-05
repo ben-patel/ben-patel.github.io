@@ -2,14 +2,15 @@
 <html>
   <head>
     <title>ben's market</title>
+    <link rel="icon" type="image/x-icon" href="stonks.ico">
     <style>
       body { margin: 0; padding-bottom: 3rem; background-color: rgb(56, 54, 57);}
 
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3.5rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #formsell { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3.5rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #inputBuy { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 0.5rem; margin: 0.25rem; }
+      #inputBuy { border: none; padding: 0 1rem; background-color:#aaa4a4; flex-grow: 1; border-radius: 0.5rem; margin: 0.25rem; }
       #inputBuy:focus { outline: none; }
-      #inputSell { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 0.5rem; margin: 0.25rem; }
+      #inputSell { border: none; padding: 0 1rem; background-color:#aaa4a4; flex-grow: 1; border-radius: 0.5rem; margin: 0.25rem; }
       #inputSell:focus { outline: none; }
       
       #form > button { border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: rgb(0, 0, 0); }
@@ -21,16 +22,20 @@
       #messages > li:nth-child(odd) { background: #676767; }
       #messages > li:nth-child(even) { background: #aaa4a4; }
       
-      #forms {position: fixed; height: 60%;  width:20%; left:20%; top:45%; text-align: center; transform: translate(-50%, -50%);
+      #forms {position: fixed; height: 60%;  width:20%; left:20%; top:50%; text-align: center; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
       #topic { color:#efefef; position:relative; font-size: 30px; font-family:Verdana, Geneva, Tahoma, sans-serif;}
       #inputForm { width:100px; background-color: gray;}
       #topicButton {position: relative;  left:5px; background-color: gray; width:75px; border-radius: 4px; cursor: pointer; }
+      #realValueButton {position: relative;  left:5px; background-color: gray; width:75px; border-radius: 4px; cursor: pointer; }
+
       #usernameDiv {position:relative; font-size: 15px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
       #usernameButton {position: relative;  left:5px; background-color: gray; width:75px; border-radius: 4px; cursor: pointer; }
-
-      #tableWrapper { position: fixed; left:50%; top:45%; text-align: right; transform: translate(-50%, -50%);
+      .tableRow {background-color: #818080; color:black;}
+      .tableData {background-color: #aaa4a4; color:black; color:hsl(239, 47%, 66%);}
+      
+      #tableWrapper {border:2px solid rgb(29, 29, 29); position: fixed; left:50%; top:45%; text-align: right; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
       #orderBook {border:1px solid rgb(20, 19, 19);  background-color: rgb(35, 35, 35);}
@@ -47,6 +52,16 @@
       }
 
       #scores {position: relative; top:50px; border: 2px solid rgb(0, 0, 0); }
+
+      #scoreboard { opacity: 0; position:fixed; border-radius: 5px; border:5px solid rgb(82, 98, 110); background-color: #424f56; width:60%; height:70%; z-index:10; top:45%; left: 64%; transform: translate(-50%, -50%);
+                      -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
+                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%); text-align: center;}
+      #scoreboardTable {border:2px solid rgb(33, 62, 97); border-radius:2px; width:200px; text-align: center; position: fixed; left:50%; top:30%; transform: translate(-50%, -50%);
+                      -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
+                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
+      .score {width:70%; height:10%; color:black; background-color: rgb(96, 96, 96); border-color: #343232;}
+      .profit {width:30%; height:10%; background-color: #6f6f6f; border-color: #343232;}
+      #winner {text-align: center; position: relative; top:2.5%; font-size: 35px;}
       #stopGame { position: relative; top:25px;}
       #stopButton {cursor:pointer; background-color: gray; border-radius: 4px; border: 2px solid #c63030;}
 
@@ -54,17 +69,14 @@
       #ticker {display: inline; padding-left:15px; color:green; position: relative; bottom: 10px;}
       #ticker1 {display:inline; padding-left: 15px; color:#c63030; position: relative; bottom: 10px;}
 
-      #scoreboard {position: absolute; opacity: 0; background-color: #818080; z-index: 10; width:80%; height:50%; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                      -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
-                      -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);text-align: center; border-radius: 5px; border:4px solid rgb(228, 215, 64);}
-      #player {font-size: 25px; list-style-type: none; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
-
-      #pastOrders { position: fixed; width:20%; left:80%; top:45.1%; text-align: right; transform: translate(-50%, -50%);
+      #pastOrders {border:2px solid rgb(29, 29, 29); position: fixed; width:20%; left:80%; top:45.1%; text-align: right; transform: translate(-50%, -50%);
                       -webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);
                       -o-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);}
       #orderTable {color:hsl(239, 47%, 66%); width:100%; border:1px solid black;}
-      .tableBuy {text-align: center; width:50%; color:#c63030; height:2.75vh; background-color: rgb(35, 35, 35);}
-      .tableSell {text-align: center; width:50%; height:2.75vh; color:green; background-color: rgb(35, 35, 35);}
+      .filled { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black; font-weight: 600;}
+      .fill {text-align: center; width:10%; height:2.75vh; background-color: rgb(35, 35, 35);}
+      .tableBuy {text-align: center;  height:2.75vh; background-color: rgb(35, 35, 35);}
+      .tableSell {text-align: center; height:2.75vh; background-color: rgb(35, 35, 35);}
       .tableBuyHead { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black; font-weight: 600;}
       .tableSellHead { padding-top:5px; text-align:center; padding-bottom:5px; background-color: rgb(129, 138, 150); color:black; font-weight: 600;}
     </style>
@@ -73,19 +85,33 @@
 
     <marquee id="stonks" behavior="scroll" direction="left"><ul id="stocnks"></ul></marquee>
     
-    <!--div id="scoreboard" >
-      <h1 style="font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size:50px;"> Final Scores: </h1>
-      <ul id="scored">
-        <li id="player"></li>
-      </ul>
-    </div-->
-
+    <div id="scoreboard">
+      <h1 id="winner">The winner is test!</h1>
+      <table id="scoreboardTable">
+        <tr>
+          <td class="score">
+            ben
+          </td>
+          <td class="profit">
+            4389
+          </td>
+        </tr>
+        <tr>
+          <td class="score">
+            ben
+          </td>
+          <td class="profit">
+            4389
+          </td>
+        </tr>
+      </table>
+    </div>
     <div id="tableWrapper">
       <table id="orderBook">
         <tr>
-          <th class="tableTitle">BID</th>
+          <th class="tableTitle">BID VOL.</th>
           <th class="tableTitle">QUOTE</th>
-          <th class="tableTitle">ASK</th>
+          <th class="tableTitle">ASK VOL.</th>
         </tr>
         <tr>
           <td class="tableBid" id="b0"></td>
@@ -177,77 +203,117 @@
           <td class="tableSellHead">
             PAST BIDS
           </td>
+          <td class="filled">
+            FL
+          </td>
           <td class="tableBuyHead">
             PAST ASKS
+          </td>
+          <td class="filled">
+            FL
           </td>
         </tr>
         <tr>
           <td class="tableSell" id="ob0"></td>
+          <td class="fill" id="fb0"></td>
           <td class="tableBuy" id="os0"></td>
+          <td class="fill" id="fs0"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob1"></td>
+          <td class="fill" id="fb1"></td>
           <td class="tableBuy" id="os1"></td>
+          <td class="fill" id="fs1"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob2"></td>
+          <td class="fill" id="fb2"></td>
           <td class="tableBuy" id="os2"></td>
+          <td class="fill" id="fs2"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob3"></td>
+          <td class="fill" id="fb3"></td>
           <td class="tableBuy" id="os3"></td>
+          <td class="fill" id="fs3"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob4"></td>
+          <td class="fill" id="fb4"></td>
           <td class="tableBuy" id="os4"></td>
+          <td class="fill" id="fs4"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob5"></td>
+          <td class="fill" id="fb5"></td>
           <td class="tableBuy" id="os5"></td>
+          <td class="fill" id="fs5"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob6"></td>
+          <td class="fill" id="fb6"></td>
           <td class="tableBuy" id="os6"></td>
+          <td class="fill" id="fs6"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob7"></td>
+          <td class="fill" id="fb7"></td>
           <td class="tableBuy" id="os7"></td>
+          <td class="fill" id="fs7"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob8"></td>
+          <td class="fill" id="fb8"></td>
           <td class="tableBuy" id="os8"></td>
+          <td class="fill" id="fs8"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob9"></td>
+          <td class="fill" id="fb9"></td>
           <td class="tableBuy" id="os9"></td>
+          <td class="fill" id="fs9"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob10"></td>
+          <td class="fill" id="fb10"></td>
           <td class="tableBuy" id="os10"></td>
+          <td class="fill" id="fs10"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob11"></td>
+          <td class="fill" id="fb11"></td>
           <td class="tableBuy" id="os11"></td>
+          <td class="fill" id="fs11"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob12"></td>
+          <td class="fill" id="fb12"></td>
           <td class="tableBuy" id="os12"></td>
+          <td class="fill" id="fs12"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob13"></td>
+          <td class="fill" id="fb13"></td>
           <td class="tableBuy" id="os13"></td>
+          <td class="fill" id="fs13"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob14"></td>
+          <td class="fill" id="fb14"></td>
           <td class="tableBuy" id="os14"></td>
+          <td class="fill" id="fs14"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob15"></td>
+          <td class="fill" id="fb15"></td>
           <td class="tableBuy" id="os15"></td>
+          <td class="fill" id="fs15"></td>
         </tr>
         <tr>
           <td class="tableSell" id="ob16"></td>
+          <td class="fill" id="fb16"></td>
           <td class="tableBuy" id="os16"></td>
+          <td class="fill" id="fs16"></td>
         </tr>
       </table>
     </div>
@@ -255,9 +321,16 @@
     <div id="forms">
       <div id="topic">
         <form id="formInput" action="">
-          <input id="topicInput" autocomplete="off" placeholder="enter topic" style="background-color:#aaa4a4; border-radius:4px;"><button id="topicButton">Enter</button> 
+          <input id="topicInput" autocomplete="off" placeholder="enter topic(HOST)" style="background-color:#aaa4a4; border-radius:4px;"><button id="topicButton">Enter</button> 
         </form>
       </div><br>
+
+      <div id="realVal">
+        <form id="realValForm" action="">
+          <input id="realValInput" autocomplete="off" placeholder="enter real value(HOST)" style="background-color:#aaa4a4; border-radius:4px;"><button id="realValueButton">Enter</button>
+        </form>
+      </div><br>
+
       <div id ="usernameDiv">
         <form id="usernameInput" action="">
           <input id="username" autocomplete="off" placeholder="enter username" style="background-color:#aaa4a4; border-radius:4px;"><button id="usernameButton">Enter</button> 
@@ -265,13 +338,16 @@
       </div>
 
       <div id="stopGame">
-        <button id="stopButton">stop game</button>
+        <button id="stopButton">STOP GAME</button>
       </div>
 
       <div id="scores">
-        <ul id="messages">
-          <li style="background-color:rgb(78, 77, 77); color:white; font-weight: 500; border-bottom: 2px rgb(0, 0, 0) solid; text-align: center;">Players:</li>
-        </ul>
+        <table id="playerTable" style="width:100%;">
+          <tr>
+            <td style="width:70%; background-color: rgb(129, 138, 150); color:black; font-weight: 600;">PLAYER</td>
+            <td style="width:30%; background-color: rgb(157, 167, 180); color:black; font-weight: 600;">PROFIT</td>
+          </tr>
+        </table>
       </div>
       
     </div>
@@ -285,64 +361,168 @@
 
 <!---------------------------------------------------------------------------------------------------------------------------------->
     <script src="/socket.io/socket.io.js"></script>
-
     <script>
+
       var socket = io();
 
       var formBuy = document.getElementById('form');
       var buyInput = document.getElementById('inputBuy');
       var sellInput = document.getElementById('inputSell');
 
+      var realValueForm = document.getElementById('realValForm');
+      var realValueInput = document.getElementById('realValInput');
+
       var usernameForm = document.getElementById('usernameInput');
       var usernameInput = document.getElementById('username');
       var usernameDiv = document.getElementById('usernameDiv');
+
+      var stopButton = document.getElementById('stopButton');
+      var scoreboard = document.getElementById('scoreboard');
 
       var topicInput = document.getElementById('topicInput');
       var topicForm = document.getElementById('formInput');
       var user = "null";
 
-      var stopForm = document.getElementById("stopButton");
-
       var prices = new Map();
+      var players = new Map();
       var names = [];
       var profit = 0;
+      var realValue = 0;
 
       var recentSells = [];
       var recentBuys = [];
+      var buys = [];
+      var sells = [];
+      var gdSell = -1;
+      var gdBuy = -1;
 
-      stopForm.addEventListener('click', function(e) {
+      stopButton.addEventListener('click', function(e) {
         e.preventDefault();
-        socket.emit('stop', profit);
-      });
+        //scoreboard.style.opacity = 1;
+        // change profits
+        //sort map then display 
+        //find max, display max
+        //empty map, and other neccesary variables
+
+        //maybe tweak profit with an array, so it updates more consistent
+      })
+
+      realValueForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if(realValInput) {
+          socket.emit('real', realValueInput.value);
+        }
+      })
 
       formBuy.addEventListener('submit', function(e) {
         e.preventDefault();
+
         if (buyInput.value) {
           recentBuys.unshift(buyInput.value);
+          if (prices.get(Number(buyInput.value)) != undefined && prices.get(Number(buyInput.value)) < 0) {
+            buys.unshift(-1* Number(buyInput.value));
+          }else {
+            buys.unshift(Number(buyInput.value)); 
+          }
 
           for(let i = 0; i < Math.min(17, recentBuys.length); i++) {
             let stringBD = "ob" + i.toString();
-            document.getElementById(stringBD).innerHTML = recentBuys[i];
+            let stringFBD = "fb" + i.toString();
+
+            if (buys[i] > 0) {
+                document.getElementById(stringFBD).innerHTML = "&#215";
+                document.getElementById(stringFBD).style.color = "red";
+             }else{
+                document.getElementById(stringFBD).innerHTML = "&#10003";
+                document.getElementById(stringFBD).style.color = "green";
+                gdBuy = Number(buyInput.value);
+
+              if (gdSell > 0) {
+                profit += (Math.abs(Number(gdSell)) - Math.abs(Number(gdBuy)));
+                gdSell = -1;
+                gdBuy = -1;
+
+                socket.emit('profitUpdate', profit, user);
+              }
+            }
+            document.getElementById(stringBD).innerHTML = Math.abs(Number(recentBuys[i]));
           }
 
+          for(let k = Math.min(recentSells.length - 1,16); k >= 0; k-- ) {
+              if (recentSells[k].toString() == buyInput.value.toString() && recentSells[k] > 0) {
+                document.getElementById("fs" + k.toString()).innerHTML = "&#10003";
+                document.getElementById("fs" + k.toString()).style.color = "green"; 
+                recentSells[k] = Number(recentSells[k])*-1;
+
+                for(let i = 0; i< sells.length; i++) {
+                  if (sells[i].toString() == buyInput.value.toString()) {
+                    sells[i] = Number(sells[i]*-1);
+                    break;
+                  }
+                }
+                break;
+            }
+          }
           socket.emit('buy input', buyInput.value);
           buyInput.value = '';
         }
+
       });
 
       formBuy.addEventListener('submit', function(e) {
         e.preventDefault();
+
         if (sellInput.value) {
           recentSells.unshift(sellInput.value);
+          if (prices.get(Number(sellInput.value)) != undefined && prices.get(Number(sellInput.value)) > 0) {
+            sells.unshift(-1* Number(sellInput.value));
+          }else {
+            sells.unshift(Number(sellInput.value)); 
+          }
 
           for(let i = 0; i < Math.min(17, recentSells.length); i++) {
             let stringSD = "os" + i.toString();
-            document.getElementById(stringSD).innerHTML = recentSells[i];
+            let stringFSD = "fs" + i.toString();
+
+            if (sells[i] > 0) {
+              document.getElementById(stringFSD).innerHTML = "&#215";
+              document.getElementById(stringFSD).style.color = "red";
+            }else {
+              document.getElementById(stringFSD).innerHTML = "&#10003";
+              document.getElementById(stringFSD).style.color = "green";
+              gdSell = Number(sellInput.value);
+
+              if (gdBuy > 0) {
+                profit += (Math.abs(Number(gdSell)) - Math.abs(Number(gdBuy)));
+                gdSell = -1;
+                gdBuy = -1;
+
+                socket.emit('profitUpdate', profit, user);
+              }
+            }
+            document.getElementById(stringSD).innerHTML = Math.abs(Number(recentSells[i]));
           }
+          for(let k = Math.min(16,recentBuys.length - 1); k >= 0; k-- ) {
+              if (recentBuys[k].toString() == sellInput.value.toString() && Number(recentBuys[k]) > 0) {
+                document.getElementById("fb" + k.toString()).innerHTML = "&#10003";
+                document.getElementById("fb" + k.toString()).style.color = "green"; 
+                recentBuys[k] = Number(recentBuys[k])*-1;
+
+                for(let i = 0; i< buys.length; i++) {
+                  if (buys[i].toString() == sellInput.value.toString()) {
+                    buys[i] = Number(buys[i]*-1);
+                    break;
+                  }
+                }
+
+                break;
+              }
+            }
           
           socket.emit('sell input', sellInput.value);
           sellInput.value = '';
         }
+
       });
 
       usernameForm.addEventListener('submit', function(e) {
@@ -363,22 +543,47 @@
         }
       })
 
+      let playerIndex = 0;
       socket.on('username', function(msg){
-        var ul = document.getElementById("messages");
-        var li = document.createElement("li");
+        var table = document.getElementById("playerTable");
+        var row = table.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
 
-        li.appendChild(document.createTextNode(msg));
-        ul.appendChild(li); 
+        cell1.innerHTML = msg;
+        cell2.innerHTML = Number(0);
+        cell2.setAttribute('id', ("pp" + playerIndex.toString()));
+
+        playerIndex++;
+        cell1.setAttribute('class',"tableRow");
+        cell2.setAttribute('class', "tableData");
       })
 
-      socket.on('stop', function(msg){
-        var leaderboard = document.getElementById('scoreboard');
-        leaderboard.style.opacity = 1;
-        var scores = document.getElementById("scored");
-        var llist = document.createElement("li");
-        llist.setAttribute("id", "player");
-        llist.appendChild(document.createTextNode(user + "'s profit: " + msg));
-        scores.appendChild(llist); 
+      socket.on('user', function(msg){
+        players = msg;
+
+        let index = 0;
+        for(const [key,value] of Object.entries(players)) {
+          
+          let playerID = "pp" + index.toString();
+          document.getElementById(playerID).innerHTML = value;
+
+          if (value == 0) {
+            document.getElementById(playerID).style.color = "hsl(239, 47%, 66%)";
+          }else if (value < 0) {
+            document.getElementById(playerID).style.color = "red";
+          }else {
+            document.getElementById(playerID).style.color = "green";
+          }
+          index++;
+          
+        }
+        
+      })
+
+      socket.on('real', function(msg) {
+        realValue = msg;
+        document.getElementById("realVal").innerHTML = '';
       })
 
       var last_meet = -1;
@@ -403,10 +608,6 @@
 
           last_buy = num;
           prices.set(num, prices.get(num) + 10);
-          
-          if (num < last_meet && prices.get(num) < 0 && last_meet != -1) {
-            profit += 10*(Math.abs(num - last_meet));
-          }
           prices = new Map([...prices.entries()].sort((a, b) => b[0] - a[0]));
           
           for(let j = 0; j < 17; j++) {
@@ -417,6 +618,7 @@
             document.getElementById(stringID).innerHTML = ''; 
             document.getElementById(buyVol).innerHTML = ''; 
             document.getElementById(sellVol).innerHTML = ''; 
+            document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)";
           }
 
           let i = 0;
@@ -427,8 +629,8 @@
 
             document.getElementById(stringID).innerHTML = key;
             if (value == 0) {
-              document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
-              setTimeout(() => {  document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; ; }, 50);
+              document.getElementById(stringID).style.backgroundColor = "red"; 
+              setTimeout(() => {document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)";}, 75);
               document.getElementById(stringID).innerHTML = '';
               document.getElementById(sellVol).innerHTML = ''; 
               document.getElementById(buyVol).innerHTML = '';
@@ -447,12 +649,11 @@
             if (i >= 17) {
               i = 0;
             }
-            if (key == last_meet) {
+            if (key == last_meet && value != 0) {
               document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
-            }else {
-              document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
             }
           }
+
       });
 
       socket.on('sell input', function(msg) {  
@@ -476,9 +677,6 @@
           }
           prices.set(num, prices.get(num) - 10);
           
-          if (num > last_meet && prices.get(num) > 0 && last_meet != -1) {
-            profit += 10*(Math.abs(num - last_meet));
-          }
           prices = new Map([...prices.entries()].sort((a, b) => b[0] - a[0]));
      
           for(let j = 0; j < 17; j++) {
@@ -488,7 +686,8 @@
             
             document.getElementById(stringID).innerHTML = ''; 
             document.getElementById(buyVol).innerHTML = ''; 
-            document.getElementById(sellVol).innerHTML = ''; 
+            document.getElementById(sellVol).innerHTML = '';
+            document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
           }
 
           let i = 0;
@@ -500,8 +699,8 @@
             document.getElementById(stringID).innerHTML = key;
             
             if (value == 0) {
-              document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
-              setTimeout(() => {  document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; }, 50);
+              document.getElementById(stringID).style.backgroundColor = "red"; 
+              setTimeout(() => {  document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; }, 75);
               document.getElementById(stringID).innerHTML = '';
               document.getElementById(sellVol).innerHTML = ''; 
               document.getElementById(buyVol).innerHTML = '';
@@ -516,11 +715,13 @@
               document.getElementById(buyVol).innerHTML = value; 
             }
             i++;
+
+            if (i >= 17) {
+              i = 0;
+            }
             
-            if (key == last_meet) {
+            if (key == last_meet && value != 0) {
               document.getElementById(stringID).style.backgroundColor = "rgb(235, 97, 97)"; 
-            }else {
-              document.getElementById(stringID).style.backgroundColor = "rgb(35, 35, 35)"; 
             }
           }
         
@@ -535,3 +736,4 @@
     </script>
   </body>
 </html>
+
