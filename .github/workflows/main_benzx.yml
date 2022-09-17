@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'benzx'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BBBF6C894D1143EB89FD110BF88C5C15 }}
+          publish-profile: ${{ secrets.XXXXXXXXXX }}
           package: .
